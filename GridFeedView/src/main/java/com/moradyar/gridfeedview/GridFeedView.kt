@@ -20,4 +20,8 @@ class GridFeedView : FrameLayout {
     )
 
     private var feedViewModel: FeedViewModel = FireworkSdk.getFeedViewModel(context)
+
+    fun callMe() {
+        feedViewModel.onViewCreated()
+    }
 }

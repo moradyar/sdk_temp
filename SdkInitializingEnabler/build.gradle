@@ -50,5 +50,4 @@ dependencies {
     implementation project(':DataReportingEnabler')
     implementation project(':AuthenticationEnabler')
     implementation project(':FeedProvidingEnabler')
-    implementation project(':SdkInitializingEnabler')
 }
