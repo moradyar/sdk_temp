@@ -1,0 +1,26 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        jcenter() // Warning: this repository is going to shut down soon
+    }
+}
+rootProject.name = "SdkArchitectureTemplate"
+include ':app'
+include ':NetworkCore'
+include ':SharedStorageCore'
+include ':UtilityCore'
+include ':MotionSensorCore'
+include ':PlayerCore'
+include ':VastXmlParsingEnabler'
+include ':ImageLoadingEnabler'
+include ':DataReportingEnabler'
+include ':AuthenticationEnabler'
+include ':FeedProvidingEnabler'
+include ':SdkInitializingEnabler'
+include ':VerticalFeedView'
+include ':HorizontalFeedView'
+include ':GridFeedView'
+include ':PlayerView'
+include ':SharedView'

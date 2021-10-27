@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="testRunner" value="GRADLE" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/AuthenticationEnabler" />
+            <option value="$PROJECT_DIR$/DataReportingEnabler" />
+            <option value="$PROJECT_DIR$/FeedProvidingEnabler" />
+            <option value="$PROJECT_DIR$/GridFeedView" />
+            <option value="$PROJECT_DIR$/HorizontalFeedView" />
+            <option value="$PROJECT_DIR$/ImageLoadingEnabler" />
+            <option value="$PROJECT_DIR$/MotionSensorCore" />
+            <option value="$PROJECT_DIR$/NetworkCore" />
+            <option value="$PROJECT_DIR$/PlayerCore" />
+            <option value="$PROJECT_DIR$/PlayerView" />
+            <option value="$PROJECT_DIR$/SdkInitializingEnabler" />
+            <option value="$PROJECT_DIR$/SharedStorageCore" />
+            <option value="$PROJECT_DIR$/SharedView" />
+            <option value="$PROJECT_DIR$/UtilityCore" />
+            <option value="$PROJECT_DIR$/VastXmlParsingEnabler" />
+            <option value="$PROJECT_DIR$/VerticalFeedView" />
+            <option value="$PROJECT_DIR$/app" />
+          </set>
+        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
