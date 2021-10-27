@@ -42,14 +42,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     implementation project(':NetworkCore')
-    implementation project(':SharedStorageCore')
-    implementation project(':UtilityCore')
-    implementation project(':MotionSensorCore')
-    implementation project(':PlayerCore')
-    implementation project(':VastXmlParsingEnabler')
-    implementation project(':ImageLoadingEnabler')
-    implementation project(':DataReportingEnabler')
-    implementation project(':AuthenticationEnabler')
     implementation project(':FeedProvidingEnabler')
 }
 
