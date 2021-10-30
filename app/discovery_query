@@ -1,0 +1,84 @@
+mutation {
+	createDiscoverFeed {
+		... on Feed {
+			id
+			itemsConnection(first: 20) {
+				pageInfo {
+					startCursor
+					endCursor
+					hasPreviousPage
+					hasNextPage
+				}
+				edges {
+					cursor
+					variant
+					node {
+						... on Video {
+							badge
+							engagementUrl
+							id
+							videoType
+							videoPosters {
+								id
+								format
+								url
+							}
+							creator {
+								id
+								name
+								username
+								avatarUrl
+							}
+							products {
+								id
+								name
+								currency
+								options
+								description
+								images {
+									id
+									position
+									url
+								}
+								units {
+									id
+									name
+									position
+									price
+									url
+								}
+							}
+							videoFiles {
+								fileUrl
+								height
+								width
+								format
+								hasWatermark
+							}
+							caption
+							webShareUrl
+							width
+							height
+							sharesCount
+							viewsCount
+							thumbnailUrl
+							revealType
+							hashtags
+							callToAction {
+								trackUrl
+								url
+								type
+								typeTranslation
+							}
+
+							id
+						}
+					}
+				}
+			}
+		}
+		... on Error {
+			message
+		}
+	}
+}

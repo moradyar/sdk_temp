@@ -1,107 +1,138 @@
 package com.moradyar.networkcore.impl
 
 import com.moradyar.networkcore.core.HttpClient
+import com.moradyar.networkcore.core.HttpException
+import com.moradyar.networkcore.core.HttpRequest
+import com.moradyar.networkcore.core.RequestState
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
-import java.net.URLEncoder
+import java.util.concurrent.Executors
 
-/**
- * The default impl of HttpClient which is internal and invisible from the outside of the module
- * This can be replaced by other impls in the future
- */
 internal class DefaultHttpClient(
     private val baseUrl: String
 ) : HttpClient {
 
-    override fun get(
-        endPoint: String,
-        headers: Map<String, String>?,
-        queryParameters: Map<String, String>?,
-        useCache: Boolean
-    ): String {
-        return "Test string"
-//        val url = createUrl(endPoint, queryParameters)
-//        val connection = URL(url)
-//        val response = StringBuffer()
-//        with(connection.openConnection() as HttpURLConnection) {
-//            requestMethod = GET
-//            setHeaders(headers)
-//            useCaches = useCache
-//
-//            BufferedReader(InputStreamReader(inputStream)).use {
-//                var inputLine = it.readLine()
-//                while (inputLine != null) {
-//                    response.append(inputLine)
-//                    inputLine = it.readLine()
-//                }
-//                it.close()
-//            }
-//        }
-//        return response.toString()
+    private val client = OkHttpClient
+        .Builder()
+        .build()
+
+    private val executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE)
+
+    override fun fetch(
+        httpRequest: HttpRequest,
+        onResponseReady: (response: RequestState) -> Unit
+    ) {
+        client
+            .newCall(createRequestBuilder(httpRequest))
+            .enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    onResponseReady(RequestState.Error(e))
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    if (response.isSuccessful) {
+                        onResponseReady(RequestState.Success(response.body?.string() ?: ""))
+                    } else {
+                        onResponseReady(
+                            RequestState.Error(
+                                HttpException(
+                                    response.code,
+                                    response.body?.string() ?: ""
+                                )
+                            )
+                        )
+                    }
+                }
+            })
     }
 
-    override fun post(
-        endPoint: String,
-        body: String?,
-        headers: Map<String, String>?,
-        queryParameters: Map<String, String>?,
-        useCache: Boolean
-    ): String {
-        val url = createUrl(endPoint, queryParameters)
-        val connection = URL(url)
-        val response = StringBuffer()
-        with(connection.openConnection() as HttpURLConnection) {
-            requestMethod = POST
-            setHeaders(headers)
-            useCaches = useCache
+    override fun fetchRaw(
+        httpRequest: HttpRequest,
+        onResponseReady: (response: RequestState) -> Unit
+    ) {
+        executorService.execute {
+            try {
+                val response = fetchRawData(httpRequest)
+                onResponseReady(RequestState.Success(response))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onResponseReady(RequestState.Error(e))
+            }
+        }
+    }
 
-            BufferedReader(InputStreamReader(inputStream)).use {
-                var inputLine = it.readLine()
-                while (inputLine != null) {
-                    response.append(inputLine)
-                    inputLine = it.readLine()
-                }
-                it.close()
+    private fun fetchRawData(httpRequest: HttpRequest): String {
+        val parameters = httpRequest.getQueryParametersString()
+        val baseUrl = "$baseUrl${httpRequest.endPoint}"
+        val url = URL(baseUrl)
+        val httpConn = url.openConnection()
+        httpRequest.headers.forEach {
+            httpConn.setRequestProperty(it.key, it.value)
+        }
+
+        httpConn.doOutput = true
+
+        httpConn.outputStream.use {
+            it.write(parameters.toByteArray(Charsets.UTF_8))
+            it.flush()
+            it.close()
+        }
+
+        val response = StringBuilder()
+
+        val rc = (httpConn as HttpURLConnection).responseCode
+        if (rc != 201 && rc != 200) {
+            val errorObject = JSONObject()
+            errorObject.put("error", rc)
+            throw Exception(errorObject.toString())
+        }
+
+        BufferedReader(InputStreamReader(httpConn.inputStream, Charsets.UTF_8)).use { br ->
+            var responseLine: String?
+            responseLine = br.readLine()
+            while (responseLine != null) {
+                response.append(responseLine.trim())
+                responseLine = br.readLine()
             }
         }
         return response.toString()
     }
 
-    private fun createQueryParameterFromMap(parameters: Map<String, String>?): String {
-        return parameters?.entries?.map { entry ->
-            "${encode(entry.key)}=${encode(entry.value)}"
-        }?.joinToString(encode("&")) { it } ?: ""
-    }
-
-    private fun encode(value: String): String {
-        return URLEncoder.encode(value, ENCODING)
-    }
-
-    private fun HttpURLConnection.setHeaders(headers: Map<String, String>?) {
-        headers?.entries?.forEach {
-            setRequestProperty(it.key, it.value)
+    private fun createRequestBuilder(httpRequest: HttpRequest): Request {
+        val url = "$baseUrl${httpRequest.getEndPointWithQueryParameters()}"
+        val builder = when (httpRequest.method) {
+            HttpRequest.Method.GET -> {
+                Request.Builder()
+                    .url(url)
+                    .get()
+            }
+            HttpRequest.Method.POST -> {
+                Request.Builder()
+                    .url(url)
+                    .post(
+                        httpRequest
+                            .body
+                            .toRequestBody(
+                                httpRequest.bodyMediaType.toMediaTypeOrNull()
+                            )
+                    )
+            }
         }
-    }
 
-    private fun createUrl(
-        endpoint: String,
-        queryParameters: Map<String, String>?
-    ): String {
-        val parameters = createQueryParameterFromMap(queryParameters)
-        val fullUrl = "$baseUrl/$endpoint"
-        val url = if (parameters.isEmpty()) {
-            fullUrl
-        } else {
-            "$fullUrl?$parameters"
+        httpRequest.headers.forEach {
+            builder.addHeader(it.key, it.value)
         }
-        return url
+        return builder.build()
     }
 
     companion object {
-        private const val ENCODING = "UTF-8"
-        private const val GET = "GET"
-        private const val POST = "POST"
+        private const val THREAD_POOL_SIZE = 5
     }
 }

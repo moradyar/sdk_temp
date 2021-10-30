@@ -7,7 +7,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.moradyar.sdkarchitecturetemplate"
+        applicationId "com.loopnow.fireworkdemo"
         minSdk 21
         targetSdk 31
         versionCode 1
@@ -40,4 +40,13 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
+
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
+
+    implementation project(":CarouselFeature")
+    implementation project(":NetworkCore")
+    implementation project(":UtilityCore")
+    implementation project(":AuthenticationFeature")
 }

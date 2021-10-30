@@ -2,33 +2,22 @@ package com.moradyar.networkcore.core
 
 import com.moradyar.networkcore.impl.DefaultHttpClient
 
-/*
-This interface is public and is visible from the outside of the module
- */
 interface HttpClient {
 
-    fun get(
-        endPoint: String,
-        headers: Map<String, String>? = null,
-        queryParameters: Map<String, String>? = null,
-        useCache: Boolean = false
-    ): String
+    fun fetch(
+        httpRequest: HttpRequest,
+        onResponseReady: (response: RequestState) -> Unit
+    )
 
-    fun post(
-        endPoint: String,
-        body: String? = null,
-        headers: Map<String, String>? = null,
-        queryParameters: Map<String, String>? = null,
-        useCache: Boolean = false
-    ): String
+    fun fetchRaw(
+        httpRequest: HttpRequest,
+        onResponseReady: (response: RequestState) -> Unit
+    )
 
-    /*
-    Factory object
-     */
     object Factory {
 
-        fun getInstance(): HttpClient {
-            return DefaultHttpClient("")
+        fun getInstance(baseUrl: String): HttpClient {
+            return DefaultHttpClient(baseUrl)
         }
     }
 }
