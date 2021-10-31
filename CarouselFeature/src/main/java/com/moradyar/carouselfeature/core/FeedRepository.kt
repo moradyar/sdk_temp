@@ -16,6 +16,10 @@ interface FeedRepository {
         onFeedReady: (FeedRequestState) -> Unit
     )
 
+    fun setPlayedVideoIndex(videoIndex: Int)
+
+    fun clearData()
+
     object Factory {
         fun getInstance(httpClient: HttpClient, authenticator: Authenticator): FeedRepository {
             return FeedRepositoryImpl(httpClient, authenticator)

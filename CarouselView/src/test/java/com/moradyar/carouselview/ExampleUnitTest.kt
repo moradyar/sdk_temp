@@ -1,4 +1,4 @@
-package com.moradyar.authenticationfeature
+package com.moradyar.carouselview
 
 import org.junit.Test
 

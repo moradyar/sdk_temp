@@ -1,6 +1,7 @@
 package com.moradyar.utilitycore.core
 
 import android.content.Context
+import com.moradyar.utilitycore.impl.DefaultEnvironmentInfoProvider
 import com.moradyar.utilitycore.impl.DefaultUserAgentInfoHelper
 
 interface UserAgentInfoHelper {
@@ -11,9 +12,8 @@ interface UserAgentInfoHelper {
         fun getInstance(
             context: Context
         ): UserAgentInfoHelper {
-            return DefaultUserAgentInfoHelper(
-                context
-            )
+            val environmentInfoProvider = DefaultEnvironmentInfoProvider(context)
+            return DefaultUserAgentInfoHelper(environmentInfoProvider)
         }
     }
 }

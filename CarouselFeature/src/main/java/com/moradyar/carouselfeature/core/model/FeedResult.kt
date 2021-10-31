@@ -5,6 +5,7 @@ sealed class FeedResult {
     object FeedOver : FeedResult()
     object FeedExpired : FeedResult()
     data class Videos(
+        val feedId: String,
         val nextCursor: String? = null,
         val videos: List<Video>
     ) : FeedResult()

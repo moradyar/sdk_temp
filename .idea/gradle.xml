@@ -12,7 +12,10 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/AuthenticationFeature" />
             <option value="$PROJECT_DIR$/CarouselFeature" />
+            <option value="$PROJECT_DIR$/CarouselView" />
+            <option value="$PROJECT_DIR$/ImageLoadingCore" />
             <option value="$PROJECT_DIR$/NetworkCore" />
+            <option value="$PROJECT_DIR$/SdkInitializer" />
             <option value="$PROJECT_DIR$/UtilityCore" />
             <option value="$PROJECT_DIR$/app" />
           </set>

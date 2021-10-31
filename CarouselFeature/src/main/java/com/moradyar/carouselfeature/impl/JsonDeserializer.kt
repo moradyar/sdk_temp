@@ -218,6 +218,12 @@ internal object JsonDeserializer {
             }
         }
 
-        return FeedResult.Videos(nextCursorId, videos)
+        val feedId = if (discoverObject.has("id")) {
+            discoverObject.optString("id")
+        } else {
+            ""
+        }
+
+        return FeedResult.Videos(feedId, nextCursorId, videos)
     }
 }

@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/morad/AndroidStudioProjects/SdkArchitectureTemplate/CarouselView/src/main/res/layout/carousel_list_item.xml" value="0.264" />
+        <entry key="..\:/Users/morad/AndroidStudioProjects/SdkArchitectureTemplate/CarouselView/src/main/res/layout/carousel_view.xml" value="0.264" />
         <entry key="..\:/Users/morad/AndroidStudioProjects/SdkArchitectureTemplate/GridFeedView/src/main/res/layout/carousel_view.xml" value="0.115625" />
         <entry key="..\:/Users/morad/AndroidStudioProjects/SdkArchitectureTemplate/GridFeedView/src/main/res/layout/grid_feed_view.xml" value="0.11778115501519756" />
         <entry key="..\:/Users/morad/AndroidStudioProjects/SdkArchitectureTemplate/app/src/main/res/layout/activity_main.xml" value="0.22509057971014493" />

@@ -2,6 +2,8 @@ package com.moradyar.carouselfeature.impl
 
 import com.moradyar.authenticationfeature.core.Authenticator
 import com.moradyar.carouselfeature.core.FeedRepository
+import com.moradyar.carouselfeature.core.model.FeedResult
+import com.moradyar.carouselfeature.core.model.Video
 import com.moradyar.networkcore.core.HttpClient
 import com.moradyar.networkcore.core.HttpRequest
 import com.moradyar.networkcore.core.RequestState
@@ -46,15 +48,41 @@ internal class FeedRepositoryImpl(
                         onFeedReady(FeedRequestState.Error(state.e))
                     }
                     is RequestState.Success -> {
-                        val result = JsonDeserializer.deserializeFeedResult(state.value)
-                        onFeedReady(FeedRequestState.Success(result))
+                        try {
+                            val result: FeedResult =
+                                JsonDeserializer.deserializeFeedResult(state.value)
+                            if (result is FeedResult.Videos) {
+                                addToCache(result.videos)
+                            }
+                            onFeedReady(FeedRequestState.Success(result))
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            onFeedReady(FeedRequestState.Error(e))
+                        }
                     }
                 }
             }
         }
     }
 
+    private fun addToCache(list: List<Video>) {
+        videoFeeds.addAll(list)
+    }
+
+    override fun setPlayedVideoIndex(videoIndex: Int) {
+        if (videoIndex > 0) {
+            latestPlayedIndex = videoIndex
+        }
+    }
+
+    override fun clearData() {
+        videoFeeds.clear()
+    }
+
     companion object {
+
+        private val videoFeeds = mutableListOf<Video>()
+        private var latestPlayedIndex: Int = 0
 
         private const val ACCEPT_LANGUAGE_HEADER_KEY = "Accept-Language"
         private const val ACCEPT_LANGUAGE_HEADER_VALUE = "en-US"

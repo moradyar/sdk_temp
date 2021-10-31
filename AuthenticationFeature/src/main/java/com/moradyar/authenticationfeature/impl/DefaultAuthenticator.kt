@@ -8,7 +8,7 @@ import com.moradyar.networkcore.core.RequestState
 import com.moradyar.utilitycore.core.UniqueIdProvider
 import com.moradyar.utilitycore.core.UserAgentInfoHelper
 
-internal class AuthenticatorImpl(
+internal class DefaultAuthenticator(
     private val httpClient: HttpClient,
     private val clientId: String,
     private val guestId: String,

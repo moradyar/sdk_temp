@@ -1,4 +1,4 @@
-package com.moradyar.utilitycore
+package com.moradyar.imageloadingcore
 
 import org.junit.Test
 
